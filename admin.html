@@ -8,7 +8,8 @@
         input, select { padding: 8px; margin: 5px; width: 300px; }
         button { padding: 10px 20px; margin-top: 10px; }
         table { margin-top: 20px; border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .action-btn { padding: 5px 10px; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -38,6 +39,8 @@
         <th>曲名</th>
         <th>原曲歌手名</th>
         <th>KEY</th>
+        <th>登録日時</th>
+        <th>操作</th>
     </tr>
 </table>
 
@@ -48,6 +51,13 @@ function addEntry() {
     const artist = document.getElementById("artist").value;
     const key = document.getElementById("key").value;
 
+    if (!name || !song || !artist || !key) {
+        alert("すべての項目を入力してください");
+        return;
+    }
+
+    const now = new Date().toLocaleString(); // 登録日時
+
     const table = document.getElementById("entryTable");
     const row = table.insertRow(-1);
 
@@ -55,8 +65,46 @@ function addEntry() {
     row.insertCell(1).innerText = song;
     row.insertCell(2).innerText = artist;
     row.insertCell(3).innerText = key;
+    row.insertCell(4).innerText = now;
+
+    // 操作ボタン（編集・削除）
+    const actionCell = row.insertCell(5);
+
+    const editBtn = document.createElement("button");
+    editBtn.innerText = "編集";
+    editBtn.className = "action-btn";
+    editBtn.onclick = () => editEntry(row);
+    actionCell.appendChild(editBtn);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "削除";
+    deleteBtn.className = "action-btn";
+    deleteBtn.onclick = () => deleteEntry(row);
+    actionCell.appendChild(deleteBtn);
 
     document.getElementById("entryForm").reset();
+}
+
+function editEntry(row) {
+    const cells = row.cells;
+
+    const name = prompt("出演者名を編集", cells[0].innerText);
+    const song = prompt("曲名を編集", cells[1].innerText);
+    const artist = prompt("原曲歌手名を編集", cells[2].innerText);
+    const key = prompt("KEYを編集", cells[3].innerText);
+
+    if (name && song && artist && key) {
+        cells[0].innerText = name;
+        cells[1].innerText = song;
+        cells[2].innerText = artist;
+        cells[3].innerText = key;
+    }
+}
+
+function deleteEntry(row) {
+    if (confirm("このエントリーを削除しますか？")) {
+        row.remove();
+    }
 }
 </script>
 
