@@ -46,44 +46,34 @@
 
 <script>
 function addEntry() {
-    const name = document.getElementById("name").value;
-    const song = document.getElementById("song").value;
-    const artist = document.getElementById("artist").value;
-    const key = document.getElementById("key").value;
+  const name = document.getElementById("name").value;
+  const song = document.getElementById("song").value;
+  const artist = document.getElementById("artist").value;
+  const key = document.getElementById("key").value;
 
-    if (!name || !song || !artist || !key) {
-        alert("すべての項目を入力してください");
-        return;
-    }
-
-    const now = new Date().toLocaleString(); // 登録日時
-
-    const table = document.getElementById("entryTable");
-    const row = table.insertRow(-1);
-
-    row.insertCell(0).innerText = name;
-    row.insertCell(1).innerText = song;
-    row.insertCell(2).innerText = artist;
-    row.insertCell(3).innerText = key;
-    row.insertCell(4).innerText = now;
-
-    // 操作ボタン（編集・削除）
-    const actionCell = row.insertCell(5);
-
-    const editBtn = document.createElement("button");
-    editBtn.innerText = "編集";
-    editBtn.className = "action-btn";
-    editBtn.onclick = () => editEntry(row);
-    actionCell.appendChild(editBtn);
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.innerText = "削除";
-    deleteBtn.className = "action-btn";
-    deleteBtn.onclick = () => deleteEntry(row);
-    actionCell.appendChild(deleteBtn);
-
-    document.getElementById("entryForm").reset();
+  // Cosmos DB に送信
+  fetch("/api/entry", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name,
+      song: song,
+      artist: artist,
+      key: key,
+      createdAt: new Date().toISOString()
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log("Saved:", data);
+    alert("登録しました！");
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    alert("登録に失敗しました。");
+  });
 }
+
 
 function editEntry(row) {
     const cells = row.cells;
