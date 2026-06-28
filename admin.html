@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>出演者エントリー管理画面</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, select { padding: 8px; margin: 5px; width: 300px; }
+        button { padding: 10px 20px; margin-top: 10px; }
+        table { margin-top: 20px; border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+    </style>
+</head>
+<body>
+
+<h2>出演者エントリー登録</h2>
+
+<form id="entryForm">
+    <label>出演者名（ニックネーム）</label><br>
+    <input type="text" id="name"><br>
+
+    <label>曲名</label><br>
+    <input type="text" id="song"><br>
+
+    <label>原曲歌手名</label><br>
+    <input type="text" id="artist"><br>
+
+    <label>KEY</label><br>
+    <input type="text" id="key"><br>
+
+    <button type="button" onclick="addEntry()">登録する</button>
+</form>
+
+<h3>登録済みエントリー一覧</h3>
+<table id="entryTable">
+    <tr>
+        <th>出演者</th>
+        <th>曲名</th>
+        <th>原曲歌手名</th>
+        <th>KEY</th>
+    </tr>
+</table>
+
+<script>
+function addEntry() {
+    const name = document.getElementById("name").value;
+    const song = document.getElementById("song").value;
+    const artist = document.getElementById("artist").value;
+    const key = document.getElementById("key").value;
+
+    const table = document.getElementById("entryTable");
+    const row = table.insertRow(-1);
+
+    row.insertCell(0).innerText = name;
+    row.insertCell(1).innerText = song;
+    row.insertCell(2).innerText = artist;
+    row.insertCell(3).innerText = key;
+
+    document.getElementById("entryForm").reset();
+}
+</script>
+
+</body>
+</html>
