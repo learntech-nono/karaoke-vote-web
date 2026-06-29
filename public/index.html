@@ -5,21 +5,11 @@
   <title>Karaoke Vote</title>
 </head>
 <body>
-  <h1>Karaoke Vote 管理画面</h1>
+  <h1>🎤 Karaoke Vote</h1>
 
-  <h2>参加者</h2>
-  <button onclick="loadParticipants()">参加者一覧を更新</button>
-  <pre id="participants"></pre>
+  <div id="status">読み込み中...</div>
 
-  <h2>歌唱登録</h2>
-  <input id="singer" placeholder="歌い手">
-  <input id="song" placeholder="曲名">
-  <button onclick="createPerformance()">登録</button>
-
-  <h2>歌唱一覧</h2>
-  <button onclick="loadPerformances()">歌唱一覧を更新</button>
-  <pre id="performances"></pre>
-
-  <script src="app.js"></script>
+  <script src="api.js"></script>
+  <script src="participant.js"></script>
 </body>
 </html>
