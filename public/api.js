@@ -1,4 +1,4 @@
-const API_BASE = "/api";
+const API_BASE = "https://karaokevote-api-ckecezakfje0gbgt.japanwest-01.azurewebsites.net/api";
 
 async function apiGet(path) {
   const res = await fetch(`${API_BASE}${path}`);
