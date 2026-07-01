@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Karaoke Vote 歌唱登録</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 20px;
+      background: #f7f7f7;
+    }
+
+    h1 {
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr 120px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input, select, button {
+      font-size: 16px;
+      padding: 6px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .table-area {
+      max-height: 420px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #333;
+      color: white;
+      z-index: 1;
+    }
+
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th.sortable {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .actions button {
+      margin-right: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎤 Karaoke Vote 歌唱登録</h1>
+
+  <section class="card">
+    <h2>新規登録</h2>
+
+    <div class="form-grid">
+      <label>歌唱順</label>
+      <input id="order" type="number" min="1">
+
+      <label>希望順位</label>
+      <select id="choiceRank">
+        <option value="1">1：第一希望</option>
+        <option value="2">2：第二希望</option>
+        <option value="3">3：第三希望</option>
+      </select>
+
+      <label>ニックネーム</label>
+      <input id="singer" type="text">
+
+      <label>曲名</label>
+      <input id="song" type="text">
+
+      <label>原曲歌手</label>
+      <input id="originSinger" type="text">
+
+      <label>Key</label>
+      <input id="key" type="text" placeholder="例：+2 / -1 / 原キー">
+    </div>
+
+    <p>
+      <button onclick="createEntry()">登録</button>
+      <button onclick="clearForm()">入力クリア</button>
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>登録済み一覧</h2>
+
+    <p>
+      並び替え：
+      <button onclick="sortEntries('order')">歌唱順</button>
+      <button onclick="sortEntries('singer')">ニックネーム</button>
+      <button onclick="sortEntries('choiceRank')">希望順位</button>
+    </p>
+
+    <div class="table-area">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortEntries('order')">歌唱順</th>
+            <th class="sortable" onclick="sortEntries('singer')">ニックネーム</th>
+            <th>曲名</th>
+            <th>原曲歌手</th>
+            <th>Key</th>
+            <th class="sortable" onclick="sortEntries('choiceRank')">希望順位</th>
+            <th>投票数</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="entryTableBody">
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script src="api.js"></script>
+  <script src="entry.js"></script>
+
+</body>
+</html>

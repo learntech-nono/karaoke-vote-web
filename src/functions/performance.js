@@ -21,9 +21,14 @@ app.http('performance', {
             const entity = {
                 partitionKey: eventId,
                 rowKey: performanceId,
+
                 singer: body.singer || '',
                 song: body.song || '',
-                order: Date.now(),
+                originSinger: body.originSinger || '',
+                key: body.key || '',
+                choiceRank: Number(body.choiceRank || 1),
+                order: Number(body.order || 0),
+
                 audienceCount: Number(body.audienceCount || 0),
                 voteCount: 0,
                 correctionFactor: 1,
@@ -35,8 +40,8 @@ app.http('performance', {
             return {
                 jsonBody: {
                     message: 'performance created',
-                    performanceId: performanceId,
-                    entity: entity
+                    performanceId,
+                    entity
                 }
             };
         }
@@ -52,10 +57,13 @@ app.http('performance', {
                 performanceId: entity.rowKey,
                 singer: entity.singer,
                 song: entity.song,
-                order: entity.order,
-                audienceCount: entity.audienceCount,
-                voteCount: entity.voteCount,
-                correctionFactor: entity.correctionFactor,
+                originSinger: entity.originSinger || '',
+                key: entity.key || '',
+                choiceRank: Number(entity.choiceRank || 1),
+                order: Number(entity.order || 0),
+                audienceCount: Number(entity.audienceCount || 0),
+                voteCount: Number(entity.voteCount || 0),
+                correctionFactor: Number(entity.correctionFactor || 1),
                 createdAt: entity.createdAt
             });
         }
@@ -65,7 +73,7 @@ app.http('performance', {
         return {
             jsonBody: {
                 count: performances.length,
-                performances: performances
+                performances
             }
         };
     }
