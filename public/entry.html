@@ -10,10 +10,6 @@
       background: #f7f7f7;
     }
 
-    h1 {
-      margin-bottom: 16px;
-    }
-
     .card {
       background: white;
       padding: 16px;
@@ -22,11 +18,27 @@
       border: 1px solid #ddd;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 120px 1fr 120px 1fr;
-      gap: 10px;
-      align-items: center;
+    .inline-form {
+      display: flex;
+      gap: 12px;
+      align-items: end;
+      flex-wrap: nowrap;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+    }
+
+    .wide input {
+      width: 220px;
+    }
+
+    .short input,
+    .short select {
+      width: 110px;
     }
 
     input, select, button {
@@ -39,7 +51,7 @@
     }
 
     .table-area {
-      max-height: 420px;
+      max-height: 430px;
       overflow-y: auto;
       border: 1px solid #ccc;
       background: white;
@@ -70,6 +82,11 @@
       text-decoration: underline;
     }
 
+    .hint {
+      color: #666;
+      font-size: 13px;
+    }
+
     .actions button {
       margin-right: 4px;
     }
@@ -81,36 +98,48 @@
   <h1>🎤 Karaoke Vote 歌唱登録</h1>
 
   <section class="card">
+    <h2>Excel一括アップロード</h2>
+    <input type="file" id="excelFile" accept=".xlsx,.xls">
+    <button onclick="uploadExcel()">アップロード</button>
+    <p class="hint">Excel列名：ニックネーム、曲名、原曲歌手、Key、希望順位</p>
+  </section>
+
+  <section class="card">
     <h2>新規登録</h2>
 
-    <div class="form-grid">
-      <label>ニックネーム</label>
-      <input id="singer" type="text">
+    <div class="inline-form">
+      <label class="field wide">
+        ニックネーム
+        <input id="singer" type="text">
+      </label>
 
-      <label>曲名</label>
-      <input id="song" type="text">
+      <label class="field wide">
+        曲名
+        <input id="song" type="text">
+      </label>
 
-      <label>原曲歌手</label>
-      <input id="originSinger" type="text">
+      <label class="field wide">
+        原曲歌手
+        <input id="originSinger" type="text">
+      </label>
 
-      <label>Key</label>
-      <input id="key" type="text" placeholder="例：+2 / -1 / 原キー">
-      <label>歌唱順</label>
-      <input id="order" type="number" min="1">
+      <label class="field short">
+        Key
+        <input id="key" type="text" placeholder="+2">
+      </label>
 
-      <label>希望順位</label>
-      <select id="choiceRank">
-        <option value="1">1：第一希望</option>
-        <option value="2">2：第二希望</option>
-        <option value="3">3：第三希望</option>
-      </select>
+      <label class="field short">
+        希望順位
+        <select id="choiceRank">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </label>
 
-    </div>
-
-    <p>
       <button onclick="createEntry()">登録</button>
-      <button onclick="clearForm()">入力クリア</button>
-    </p>
+      <button onclick="clearForm()">クリア</button>
+    </div>
   </section>
 
   <section class="card">
@@ -118,31 +147,31 @@
 
     <p>
       並び替え：
-      <button onclick="sortEntries('order')">歌唱順</button>
       <button onclick="sortEntries('singer')">ニックネーム</button>
       <button onclick="sortEntries('choiceRank')">希望順位</button>
+      <button onclick="sortEntries('order')">歌唱順</button>
     </p>
 
     <div class="table-area">
       <table>
         <thead>
           <tr>
-            <th class="sortable" onclick="sortEntries('order')">歌唱順</th>
             <th class="sortable" onclick="sortEntries('singer')">ニックネーム</th>
             <th>曲名</th>
             <th>原曲歌手</th>
             <th>Key</th>
             <th class="sortable" onclick="sortEntries('choiceRank')">希望順位</th>
+            <th class="sortable" onclick="sortEntries('order')">歌唱順</th>
             <th>投票数</th>
             <th>操作</th>
           </tr>
         </thead>
-        <tbody id="entryTableBody">
-        </tbody>
+        <tbody id="entryTableBody"></tbody>
       </table>
     </div>
   </section>
 
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="api.js"></script>
   <script src="entry.js"></script>
 
