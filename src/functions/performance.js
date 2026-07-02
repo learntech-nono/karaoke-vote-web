@@ -3,7 +3,7 @@ const { TableClient } = require('@azure/data-tables');
 const crypto = require('crypto');
 
 app.http('performance', {
-    methods: ['POST', 'GET'],
+    methods: ['POST', 'GET', 'PUT', 'DELETE'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
         const connectionString = process.env.AzureWebJobsStorage;
@@ -46,6 +46,58 @@ app.http('performance', {
             };
         }
 
+        if (request.method === 'PUT') {
+            const body = await request.json();
+            const performanceId = body.performanceId;
+
+            if (!performanceId) {
+                return {
+                    status: 400,
+                    jsonBody: { message: 'performanceId is required' }
+                };
+            }
+
+            const entity = {
+                partitionKey: eventId,
+                rowKey: performanceId,
+                singer: body.singer || '',
+                song: body.song || '',
+                originSinger: body.originSinger || '',
+                key: body.key || '',
+                choiceRank: Number(body.choiceRank || 1),
+                order: Number(body.order || 0)
+            };
+
+            await client.updateEntity(entity, 'Merge');
+
+            return {
+                jsonBody: {
+                    message: 'performance updated',
+                    performanceId
+                }
+            };
+        }
+
+        if (request.method === 'DELETE') {
+            const performanceId = request.query.get('performanceId');
+
+            if (!performanceId) {
+                return {
+                    status: 400,
+                    jsonBody: { message: 'performanceId is required' }
+                };
+            }
+
+            await client.deleteEntity(eventId, performanceId);
+
+            return {
+                jsonBody: {
+                    message: 'performance deleted',
+                    performanceId
+                }
+            };
+        }
+        
         const performances = [];
 
         for await (const entity of client.listEntities({

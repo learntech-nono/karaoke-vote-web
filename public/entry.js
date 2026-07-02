@@ -1,3 +1,4 @@
+let editingPerformanceId = null;
 let entries = [];
 let currentSortKey = "singer";
 
@@ -54,7 +55,14 @@ async function createEntry() {
     return;
   }
 
-  await apiPost("/performance", body);
+  if (editingPerformanceId) {
+    body.performanceId = editingPerformanceId;
+    await apiPut("/performance", body);
+    editingPerformanceId = null;
+  } else {
+    await apiPost("/performance", body);
+  }
+
   clearForm();
   await loadEntries();
 }
@@ -107,11 +115,29 @@ async function uploadExcel() {
 }
 
 function editEntry(performanceId) {
-  alert("編集機能は次に実装します: " + performanceId);
+  const entry = entries.find(e => e.performanceId === performanceId);
+
+  if (!entry) {
+    alert("対象データが見つかりません。");
+    return;
+  }
+
+  editingPerformanceId = performanceId;
+
+  document.getElementById("singer").value = entry.singer || "";
+  document.getElementById("song").value = entry.song || "";
+  document.getElementById("originSinger").value = entry.originSinger || "";
+  document.getElementById("key").value = entry.key || "";
+  document.getElementById("choiceRank").value = String(entry.choiceRank || 1);
 }
 
-function deleteEntry(performanceId) {
-  alert("削除機能は次に実装します: " + performanceId);
+async function deleteEntry(performanceId) {
+  if (!confirm("この歌唱データを削除しますか？")) {
+    return;
+  }
+
+  await apiDelete(`/performance?performanceId=${performanceId}`);
+  await loadEntries();
 }
 
 loadEntries();
